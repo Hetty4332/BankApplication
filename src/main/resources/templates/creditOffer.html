@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="/media/examples/link-element-example.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформить кредитное предложение</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <form class="col-sm-6" th:action="@{/creditOffer}" method="post" th:object="${creditOffer}">
+        <input class="form-control" type="text" hidden th:field="*{id}"/>
+        <h1>Кредитное предложение </h1>
+        <div class="row">
+            <div class="col">
+                <select th:field="*{clientId}" class="form-select" aria-label="Default select example">
+                    <option th:value="-1" selected> Выбор клиента</option>
+                    <option th:each="client : ${clients}"
+                            th:value="${client.id}"
+                            th:utext="${client.name}"></option>
+                </select>
+                <p class="text-danger" th:if="${#fields.hasErrors('clientId')}" th:errors="*{clientId}"></p>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col">
+                <select id="bankId" class="form-select" aria-label="Default select example">
+                    <option th:value="-1" selected> Выбор банка</option>
+                    <option th:each="bank : ${banks}"
+                            th:value="${bank.getId()}"
+                            th:utext="${bank.name}"></option>
+                </select>
+                <p class="text-danger" th:if="${#fields.hasErrors('creditId')}" th:errors="*{creditId}"></p>
+            </div>
+        </div>
+        </br>
+        <div class="row">
+            <div class="col">
+                <select id="creditId" th:field="*{creditId}" class="form-select" aria-label="Default select example">
+                    <option th:value="-1" selected> Выбор кредита</option>
+                </select>
+                <p class="text-danger" th:if="${#fields.hasErrors('creditId')}" th:errors="*{creditId}"></p>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="sumCredit" class="form-label"> Сумма </label>
+                <input id="sumCredit" class="form-control" type="text" th:field="*{sumCredit}"/>
+                <p class="text-danger" th:if="${#fields.hasErrors('sumCredit')}" th:errors="*{sumCredit}"></p>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="countMonthCredit" class="form-label"> Срок </label>
+                <input id="countMonthCredit" class="form-control" type="text" th:field="*{countMonthCredit}"/>
+            </div>
+        </div>
+        <button class="btn btn-secondary mt-2" type="submit">Сформировать</button>
+        <a class="btn btn-secondary mt-2" th:href="@{/}">Главная</a>
+    </form>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+
+<script th:inline="javascript">
+    let selectBank = document.getElementById('bankId');
+    let selectCredit = document.getElementById('creditId')
+    selectBank.onchange = function () {
+        selectCredit.innerHTML = '';
+        for (let i = 0; i < banks.length; i++) {
+            if (banks[i].id == selectBank.value) {
+                for (let c = 0; c < banks[i].credits.length; c++) {
+
+                    let newSelect = document.createElement("option");
+                    let credit = banks[i].credits[c];
+                    newSelect.setAttribute("value", credit.id);
+                    newSelect.text = credit.creditLimit + '-лимит кредита ' + credit.interestRate + '- процентная ставка ';
+                    selectCredit.appendChild(newSelect);
+                }
+            }
+        }
+    };
+    let banks = [[${banks}]];
+</script>
+</html>

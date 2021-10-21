@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>График платежей</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+    <div class="container">
+        <p class="h1">График платежей</p>
+        <table class="table table-striped" border="1">
+            <tr>
+                <th scope="col">
+                    Дата платежа
+                </th>
+                <th scope="col">
+                    Платеж
+                </th>
+                <th scope="col">
+                    Процентная часть
+                </th>
+                <th scope="col">
+                    Долговая часть
+                </th>
+            </tr>
+            <tr th:each="payment : ${payments}">
+                <td th:utext="${payment.getPaymentDate()}"></td>
+                <td th:utext="${payment.getPaymentSum()}"></td>
+                <td th:utext="${payment.getAmountOfInterestRepayment()}"></td>
+                <td th:utext="${payment.getCreditBodyRepayment()}"></td>
+            </tr>
+        </table>
+        <a class="btn btn-secondary mt-2" th:href="@{/}">Главная</a>
+    </div>
+
+<body>
+</body>
+</html>
