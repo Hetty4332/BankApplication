@@ -10,12 +10,25 @@ import java.util.Optional;
 
 @Service
 public class ClientService {
-    @Autowired
+
     ClientRepository clientRepository;
-    @Autowired
+
     BankService bankService;
-    @Autowired
+
     CreditOfferService creditOfferService;
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
+
+    @Autowired
+    public void setCreditOfferService(CreditOfferService creditOfferService) {
+        this.creditOfferService = creditOfferService;
+    }
 
     public List<Client> getClients() {
         return clientRepository.findAll();

@@ -19,8 +19,13 @@ import java.util.List;
 @Controller
 public class BankController {
 
-    @Autowired
+
     private BankService bankService;
+
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
 
     @GetMapping("/banks")
     public String getBanks(Model model) {

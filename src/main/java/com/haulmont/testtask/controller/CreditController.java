@@ -17,11 +17,19 @@ import javax.validation.Valid;
 
 @Controller
 public class CreditController {
-    @Autowired
-    private CreditService creditService;
-    @Autowired
-    private BankService bankService;
 
+    private CreditService creditService;
+
+    private BankService bankService;
+    @Autowired
+    public void setCreditService(CreditService creditService) {
+        this.creditService = creditService;
+    }
+
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
 
     @GetMapping("/credits")
     public String getCredits(Model model) {

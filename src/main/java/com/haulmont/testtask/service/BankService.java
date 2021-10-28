@@ -12,8 +12,13 @@ import java.util.Optional;
 
 @Service
 public class BankService {
-    @Autowired
+
     BankRepository bankRepository;
+
+    @Autowired
+    public void setBankRepository(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
+    }
 
     public List<Bank> getBanks() {
         return bankRepository.findAll();
@@ -30,6 +35,7 @@ public class BankService {
     public Bank getBankById(Long id) {
         return bankRepository.findById(id).orElse(new Bank());
     }
+
 
     public void deleteCreditInBank(Credit credit) {
         Optional<Bank> bankOptional = bankRepository.findBankByCreditsContains(credit);

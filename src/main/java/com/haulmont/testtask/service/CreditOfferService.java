@@ -21,14 +21,30 @@ import java.util.Optional;
 @Service
 public class CreditOfferService {
 
-    @Autowired
     private ClientRepository clientRepository;
-    @Autowired
+
     private CreditRepository creditRepository;
-    @Autowired
+
     private CreditOfferRepository creditOfferRepository;
-    @Autowired
+
     private PaymentRepository paymentRepository;
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+    @Autowired
+    public void setCreditRepository(CreditRepository creditRepository) {
+        this.creditRepository = creditRepository;
+    }
+    @Autowired
+    public void setCreditOfferRepository(CreditOfferRepository creditOfferRepository) {
+        this.creditOfferRepository = creditOfferRepository;
+    }
+
+    @Autowired
+    public void setPaymentRepository(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
 
     // долговая часть ежемесячного платежа
     public double deptPart(int creditTime, double sumCredit) {

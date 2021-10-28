@@ -23,14 +23,31 @@ import javax.validation.Valid;
 @Controller
 public class CreditOfferController {
 
-    @Autowired
+
     private CreditOfferService creditOfferService;
-    @Autowired
+
     private ClientService clientService;
-    @Autowired
+
     private CreditRepository creditService;
-    @Autowired
+
     private BankService bankService;
+    @Autowired
+    public void setCreditOfferService(CreditOfferService creditOfferService) {
+        this.creditOfferService = creditOfferService;
+    }
+    @Autowired
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+    @Autowired
+    public void setCreditService(CreditRepository creditService) {
+        this.creditService = creditService;
+    }
+
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
 
     @GetMapping("/payments/{id}")
     public String getPayments(Model model, @PathVariable("id") Long id) {

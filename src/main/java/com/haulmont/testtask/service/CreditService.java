@@ -7,20 +7,41 @@ import com.haulmont.testtask.repository.BankRepository;
 import com.haulmont.testtask.repository.CreditRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CreditService {
-    @Autowired
+
     CreditRepository creditRepository;
-    @Autowired
+
     BankService bankService;
-    @Autowired
+
     BankRepository bankRepository;
-    @Autowired
+
     CreditOfferService creditOfferService;
+
+    @Autowired
+    public void setCreditRepository(CreditRepository creditRepository) {
+        this.creditRepository = creditRepository;
+    }
+
+    @Autowired
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
+
+    @Autowired
+    public void setBankRepository(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
+    }
+
+    @Autowired
+    public void setCreditOfferService(CreditOfferService creditOfferService) {
+        this.creditOfferService = creditOfferService;
+    }
 
     public List<CreditWeb> getCredits() {
         List<CreditWeb> creditWebs = new ArrayList<>();
