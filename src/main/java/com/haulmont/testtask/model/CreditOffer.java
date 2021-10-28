@@ -12,7 +12,7 @@ public class CreditOffer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
     @ManyToOne(fetch = FetchType.LAZY)
     private Credit credit;

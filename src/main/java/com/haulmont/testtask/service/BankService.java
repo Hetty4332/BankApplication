@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class BankService {
 
-    BankRepository bankRepository;
+   private BankRepository bankRepository;
 
     @Autowired
     public void setBankRepository(BankRepository bankRepository) {

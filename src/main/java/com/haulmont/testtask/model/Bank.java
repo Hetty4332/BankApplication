@@ -16,7 +16,7 @@ public class Bank {
     @Column
     @NotBlank
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Credit> credits;
     @OneToMany(fetch = FetchType.LAZY)
     private List<Client> clients;

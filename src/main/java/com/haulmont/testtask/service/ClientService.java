@@ -11,15 +11,17 @@ import java.util.Optional;
 @Service
 public class ClientService {
 
-    ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
-    BankService bankService;
+    private BankService bankService;
 
-    CreditOfferService creditOfferService;
+    private CreditOfferService creditOfferService;
+
     @Autowired
     public void setClientRepository(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
+
     @Autowired
     public void setBankService(BankService bankService) {
         this.bankService = bankService;
@@ -33,9 +35,11 @@ public class ClientService {
     public List<Client> getClients() {
         return clientRepository.findAll();
     }
+
     public void saveClient(Client client) {
-       clientRepository.save(client);
+        clientRepository.save(client);
     }
+
     public void deleteClientById(Long id) {
         Optional<Client> client = clientRepository.findById(id);
         if (client.isEmpty()) {

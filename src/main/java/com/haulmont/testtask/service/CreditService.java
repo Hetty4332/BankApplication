@@ -15,13 +15,13 @@ import java.util.Optional;
 @Service
 public class CreditService {
 
-    CreditRepository creditRepository;
+    private CreditRepository creditRepository;
 
-    BankService bankService;
+    private BankService bankService;
 
-    BankRepository bankRepository;
+    private BankRepository bankRepository;
 
-    CreditOfferService creditOfferService;
+    private CreditOfferService creditOfferService;
 
     @Autowired
     public void setCreditRepository(CreditRepository creditRepository) {
