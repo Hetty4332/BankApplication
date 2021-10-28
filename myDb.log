@@ -1,7 +1,0 @@
-/*C4*/SET SCHEMA PUBLIC
-alter table bank_clients drop constraint UK_6sqi684fpag5ulmrewf6s3fcx
-alter table bank_clients add constraint UK_6sqi684fpag5ulmrewf6s3fcx unique (clients_id)
-alter table bank_credits drop constraint UK_d16udxk31nldhxuwq1n2iwe2e
-alter table bank_credits add constraint UK_d16udxk31nldhxuwq1n2iwe2e unique (credits_id)
-alter table credit_offer_chart_of_payments drop constraint UK_72f9k9up0x0rtwnr224aga3su
-alter table credit_offer_chart_of_payments add constraint UK_72f9k9up0x0rtwnr224aga3su unique (chart_of_payments_id)

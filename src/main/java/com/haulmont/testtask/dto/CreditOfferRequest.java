@@ -17,7 +17,9 @@ public class CreditOfferRequest {
     @Min(value=0, message = "Не должно быть пустым")
     private Long creditId;
     @NotNull
+    @Min(value=0, message = "Значение не должно быть отрицательным")
     private Integer sumCredit;
     @NotNull
+    @Min(value=0, message = "Значение не должно быть отрицательным")
     private Integer countMonthCredit;
 }

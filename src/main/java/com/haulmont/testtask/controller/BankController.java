@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 public class BankController {
 
-
     private BankService bankService;
 
     @Autowired
