@@ -1,6 +1,7 @@
 package com.haulmont.testtask.controller;
 
 import com.haulmont.testtask.dto.CreditOfferRequest;
+import com.haulmont.testtask.exeption.NoEntityException;
 import com.haulmont.testtask.model.Credit;
 import com.haulmont.testtask.model.CreditOffer;
 import com.haulmont.testtask.model.Payment;
@@ -81,7 +82,19 @@ public class CreditOfferController {
                 return "creditOffer";
             }
         }
-        CreditOffer save = creditOfferService.saveCreditOffer(creditOffer);
+        CreditOffer save;
+        try {
+            save = creditOfferService.saveCreditOffer(creditOffer);
+        }
+        catch (NoEntityException e)
+        {
+            bindingResult.addError(new FieldError("creditOffer", e.getEntityName()+ "Id", "некорректное значение поля"));
+            model.addAttribute("clients", clientService.getClients());
+            model.addAttribute("banks", bankService.getBanks());
+            return "creditOffer";
+
+        }
+
         return "redirect:/payments/" + save.getId();
     }
 

@@ -17,7 +17,7 @@ public class Client {
     @Column
     @NotBlank
     @Size(max=50)
-    private String name;//ФИО клиента
+    private String name;
     @Column
     @NotBlank
     private String phoneNumber;

@@ -1,6 +1,7 @@
 package com.haulmont.testtask.service;
 
 import com.haulmont.testtask.dto.CreditWeb;
+import com.haulmont.testtask.exeption.NoEntityException;
 import com.haulmont.testtask.model.Bank;
 import com.haulmont.testtask.model.Credit;
 import com.haulmont.testtask.repository.BankRepository;
@@ -46,14 +47,16 @@ public class CreditService {
     public List<CreditWeb> getCredits() {
         List<CreditWeb> creditWebs = new ArrayList<>();
         List<Credit> credits = creditRepository.findAll();
-        for (int i = 0; i < credits.size(); i++) {
+        for (Credit value : credits) {
             CreditWeb creditWeb = new CreditWeb();
-            Credit credit = credits.get(i);
+            Credit credit = value;
             creditWeb.setId(credit.getId());
             creditWeb.setInterestRate(credit.getInterestRate());
             creditWeb.setCreditLimit(credit.getCreditLimit());
-            Optional<Bank> bankOptional = bankRepository.findBankByCreditsContains(credit);
-            creditWeb.setBankName(bankOptional.get().getName());
+            String bankName = bankRepository.findBankByCreditsContains(credit)
+                    .map(Bank::getName)
+                    .orElse("банк не найден!");
+            creditWeb.setBankName(bankName);
             creditWebs.add(creditWeb);
         }
         return creditWebs;

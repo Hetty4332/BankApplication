@@ -19,8 +19,8 @@ public class Payment {
     @Column
     private double paymentSum;
     @Column
-    private double creditBodyRepayment;//Сумма гашения тела кредита
+    private double creditBodyRepayment;
     @Column
-    private double amountOfInterestRepayment;//Сумма гашения процентов
+    private double amountOfInterestRepayment;
 
 }

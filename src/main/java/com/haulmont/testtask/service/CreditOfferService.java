@@ -1,6 +1,7 @@
 package com.haulmont.testtask.service;
 
 import com.haulmont.testtask.dto.CreditOfferRequest;
+import com.haulmont.testtask.exeption.NoEntityException;
 import com.haulmont.testtask.model.Client;
 import com.haulmont.testtask.model.Credit;
 import com.haulmont.testtask.model.CreditOffer;
@@ -28,14 +29,17 @@ public class CreditOfferService {
     private CreditOfferRepository creditOfferRepository;
 
     private PaymentRepository paymentRepository;
+
     @Autowired
     public void setClientRepository(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
+
     @Autowired
     public void setCreditRepository(CreditRepository creditRepository) {
         this.creditRepository = creditRepository;
     }
+
     @Autowired
     public void setCreditOfferRepository(CreditOfferRepository creditOfferRepository) {
         this.creditOfferRepository = creditOfferRepository;
@@ -64,9 +68,9 @@ public class CreditOfferService {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
 
-    public List<Payment> getPayments(CreditOfferRequest creditOffer) {
+    public List<Payment> getPayments(CreditOfferRequest creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
-        List<Payment> chartOfPayments = new ArrayList();
+        List<Payment> chartOfPayments = new ArrayList<>();
         int time = creditOffer.getCountMonthCredit();
         double remainder = creditOffer.getSumCredit();
         for (int i = 0; i < time; i++) {
@@ -84,11 +88,11 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferRequest creditOffer) {
+    public CreditOffer saveCreditOffer(CreditOfferRequest creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
-        Client client = clientOptional.get();
-        List<Payment> chartOfPayments = new ArrayList();
+        Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
+        List<Payment> chartOfPayments = new ArrayList<>();
         chartOfPayments.addAll(getPayments(creditOffer));
         CreditOffer saveCreditOffer = new CreditOffer();
         saveCreditOffer.setChartOfPayments(chartOfPayments);
@@ -98,12 +102,12 @@ public class CreditOfferService {
         return creditOfferRepository.save(saveCreditOffer);
     }
 
-    private Credit getCreditById(Long id) {
-        Optional<Credit> creditOptional = creditRepository.findById(id);
-        return creditOptional.get();
+    private Credit getCreditById(Long id) throws NoEntityException {
+        return creditRepository.findById(id)
+                .orElseThrow(() -> new NoEntityException("credit"));
     }
 
-    public List<Payment> getPaymentsByCreditOfferId(Long id) {
+    public List<Payment> getPaymentsByCreditOfferId(Long id)  {
         return creditOfferRepository.findById(id).get().getChartOfPayments();
     }
 

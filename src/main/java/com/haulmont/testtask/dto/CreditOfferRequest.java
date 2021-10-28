@@ -10,7 +10,6 @@ import java.util.List;
 
 @Data
 public class CreditOfferRequest {
-
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long clientId;
