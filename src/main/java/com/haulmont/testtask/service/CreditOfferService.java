@@ -1,15 +1,14 @@
 package com.haulmont.testtask.service;
 
-import com.haulmont.testtask.dto.CreditOfferRequest;
+import com.haulmont.testtask.dto.CreditOfferWeb;
+import com.haulmont.testtask.dto.CreditWeb;
 import com.haulmont.testtask.exeption.NoEntityException;
-import com.haulmont.testtask.model.Client;
-import com.haulmont.testtask.model.Credit;
-import com.haulmont.testtask.model.CreditOffer;
-import com.haulmont.testtask.model.Payment;
+import com.haulmont.testtask.model.*;
 import com.haulmont.testtask.repository.ClientRepository;
 import com.haulmont.testtask.repository.CreditOfferRepository;
 import com.haulmont.testtask.repository.CreditRepository;
 import com.haulmont.testtask.repository.PaymentRepository;
+import com.sun.xml.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -58,7 +57,6 @@ public class CreditOfferService {
 
     }
 
-
     public double percent(double remainder, double interestRate) {
 
         return remainder * (interestRate / 100.0 / 12.0);
@@ -68,7 +66,7 @@ public class CreditOfferService {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
 
-    public List<Payment> getPayments(CreditOfferRequest creditOffer) throws NoEntityException {
+    public List<Payment> getPayments(CreditOfferWeb creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         List<Payment> chartOfPayments = new ArrayList<>();
         int time = creditOffer.getCountMonthCredit();
@@ -88,7 +86,7 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferRequest creditOffer) throws NoEntityException {
+    public CreditOffer saveCreditOffer(CreditOfferWeb creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
         Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
@@ -121,7 +119,7 @@ public class CreditOfferService {
                 .ifPresent(creditOfferRepository::delete);
     }
 
-    public void validate(CreditOfferRequest creditOffer, BindingResult bindingResult) {
+    public void validate(CreditOfferWeb creditOffer, BindingResult bindingResult) {
         Credit credit = creditRepository.getById(creditOffer.getCreditId());
         if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
             bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
@@ -129,6 +127,20 @@ public class CreditOfferService {
     }
 
     public List<CreditOffer> getCreditOffers() {
-        return creditOfferRepository.findAll();
+        List<CreditOfferWeb> creditOfferWebs = new ArrayList<>();
+        List<CreditOffer> creditOffers = creditOfferRepository.findAll();
+        for (CreditOffer value : creditOffers) {
+            CreditOfferWeb creditOfferWeb = new CreditOfferWeb();
+            CreditOffer creditOffer = value;
+            creditOfferWeb.setId(creditOffer.getId());
+            creditOfferWeb.setSumCredit(creditOffer.getSumCredit());
+            //TODO Нужно доделать
+            String bankName = bankRepository.findBankByCreditsContains(credit)
+                    .map(Bank::getName)
+                    .orElse("банк не найден!");
+            creditWeb.setBankName(bankName);
+            creditWebs.add(creditWeb);
+        }
+        return creditWebs;
     }
 }

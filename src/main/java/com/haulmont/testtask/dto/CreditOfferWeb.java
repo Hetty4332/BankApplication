@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class CreditOfferRequest {
+public class CreditOfferWeb {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long clientId;

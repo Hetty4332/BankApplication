@@ -4,26 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Список кредитных предложений</title>
-    <div>
-        <table class="table table-striped" border="1">
-            <tr>
-                <th scope="col">
-                  Клиент
-                </th>
-                <th scope="col">
-                   Ставка по кредиту
-                </th>
-                <th scope="col">
-                    Сумма
-                </th>
-                <th scope="col">
-                    Срок
-                </th>
-                <th>
+    <div class="card" style="width: 18rem;" th:each="creditOffer : ${creditOffers}">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" th:text="'Клиент: '+${creditOffer.getClient().getName()}"></li>
+            <li class="list-group-item" th:text="'Ставка: '+${creditOffer.getCredit().getInterestRate()}"></li>
+            <li class="list-group-item" th:text="'Сумма: '+${creditOffer.getSumCredit()}"></li>
+            <li class="list-group-item" th:text="'Срок: '+${creditOffer.get}"></li>
+        </ul>
+    </div>
 
-                </th>
-            </tr>
-            <tr>
             <tr th:each="creditOffer : ${creditOffers}">
                 <td th:utext="${creditOffer.getClient().getName()}"></td>
                 <td th:utext="${creditOffer.getCredit().getInterestRate()}"></td>
@@ -31,8 +20,42 @@
                 <td th:utext="${creditOffer.getSumCredit()}"></td>
                 <td>
                 </td>
-        </tr>
+            <p class="h1">График платежей</p>
+            <table class="table table-striped" border="1">
+                <tr>
+                    <th scope="col">
+                        Дата платежа
+                    </th>
+                    <th scope="col">
+                        Платеж
+                    </th>
+                    <th scope="col">
+                        Процентная часть
+                    </th>
+                    <th scope="col">
+                        Долговая часть
+                    </th>
+                </tr>
+                <tr th:each="payment : ${payments}">
+                    <td th:utext="${payment.getPaymentDate()}"></td>
+                    <td th:utext="${payment.getPaymentSum()}"></td>
+                    <td th:utext="${payment.getAmountOfInterestRepayment()}"></td>
+                    <td th:utext="${payment.getCreditBodyRepayment()}"></td>
+                </tr>
+            </table>
+            </tr>
         </table>
+
+       <!-- <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseСhartOfPayments" role="button"
+           aria-expanded="false" aria-controls="collapseExample">
+            График платежей
+        </a>-->
+    </div>
+
+   <!-- <div class="collapse" id="collapseСhartOfPayments">
+        <div class="card card-body">-->
+
+      <!--  </div>-->
     </div>
 </head>
 <body>

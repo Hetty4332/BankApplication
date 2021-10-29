@@ -1,15 +1,12 @@
 package com.haulmont.testtask.controller;
 
-import com.haulmont.testtask.dto.CreditOfferRequest;
+import com.haulmont.testtask.dto.CreditOfferWeb;
 import com.haulmont.testtask.exeption.NoEntityException;
-import com.haulmont.testtask.model.Credit;
 import com.haulmont.testtask.model.CreditOffer;
 import com.haulmont.testtask.model.Payment;
-import com.haulmont.testtask.repository.CreditRepository;
 import com.haulmont.testtask.service.BankService;
 import com.haulmont.testtask.service.ClientService;
 import com.haulmont.testtask.service.CreditOfferService;
-import com.haulmont.testtask.service.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +52,7 @@ public class CreditOfferController {
 
     @GetMapping("/creditOffer")
     public String getCreditOffer(Model model) {
-        model.addAttribute("creditOffer", new CreditOfferRequest());
+        model.addAttribute("creditOffer", new CreditOfferWeb());
         model.addAttribute("payment", new Payment());
         model.addAttribute("clients", clientService.getClients());
         model.addAttribute("banks", bankService.getBanks());
@@ -63,7 +60,7 @@ public class CreditOfferController {
     }
 
     @PostMapping("/creditOffer")
-    public String addCreditOffer(Model model, @ModelAttribute("creditOffer") @Valid CreditOfferRequest creditOffer, BindingResult bindingResult) {
+    public String addCreditOffer(Model model, @ModelAttribute("creditOffer") @Valid CreditOfferWeb creditOffer, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("clients", clientService.getClients());
@@ -92,8 +89,9 @@ public class CreditOfferController {
     }
 
     @PostMapping("/creditOffers")
-    public String addCreditOffers(Model model) {
+    public String addCreditOffers(Model model, @PathVariable("id") Long id) {
         model.addAttribute("creditOffers", creditOfferService.getCreditOffers());
+        model.addAttribute("payments", creditOfferService.getPaymentsByCreditOfferId(id));
         return "/creditOffers";
     }
-    }
+}
