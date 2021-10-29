@@ -9,6 +9,7 @@ import com.haulmont.testtask.repository.CreditRepository;
 import com.haulmont.testtask.service.BankService;
 import com.haulmont.testtask.service.ClientService;
 import com.haulmont.testtask.service.CreditOfferService;
+import com.haulmont.testtask.service.CreditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,26 +25,22 @@ import javax.validation.Valid;
 @Controller
 public class CreditOfferController {
 
-
     private CreditOfferService creditOfferService;
 
     private ClientService clientService;
 
-    private CreditRepository creditService;
-
     private BankService bankService;
+
     @Autowired
     public void setCreditOfferService(CreditOfferService creditOfferService) {
         this.creditOfferService = creditOfferService;
     }
+
     @Autowired
     public void setClientService(ClientService clientService) {
         this.clientService = clientService;
     }
-    @Autowired
-    public void setCreditService(CreditRepository creditService) {
-        this.creditService = creditService;
-    }
+
 
     @Autowired
     public void setBankService(BankService bankService) {
@@ -72,11 +69,9 @@ public class CreditOfferController {
             model.addAttribute("clients", clientService.getClients());
             model.addAttribute("banks", bankService.getBanks());
             return "creditOffer";
-        }
-        else {
-            validate(creditOffer, bindingResult);
-            if (bindingResult.hasErrors())
-            {
+        } else {
+            creditOfferService.validate(creditOffer, bindingResult);
+            if (bindingResult.hasErrors()) {
                 model.addAttribute("clients", clientService.getClients());
                 model.addAttribute("banks", bankService.getBanks());
                 return "creditOffer";
@@ -85,10 +80,8 @@ public class CreditOfferController {
         CreditOffer save;
         try {
             save = creditOfferService.saveCreditOffer(creditOffer);
-        }
-        catch (NoEntityException e)
-        {
-            bindingResult.addError(new FieldError("creditOffer", e.getEntityName()+ "Id", "некорректное значение поля"));
+        } catch (NoEntityException e) {
+            bindingResult.addError(new FieldError("creditOffer", e.getEntityName() + "Id", "некорректное значение поля"));
             model.addAttribute("clients", clientService.getClients());
             model.addAttribute("banks", bankService.getBanks());
             return "creditOffer";
@@ -98,10 +91,9 @@ public class CreditOfferController {
         return "redirect:/payments/" + save.getId();
     }
 
-    private void validate(CreditOfferRequest creditOffer, BindingResult bindingResult) {
-        Credit credit = creditService.getById(creditOffer.getCreditId());
-        if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
-            bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
-        }
+    @PostMapping("/creditOffers")
+    public String addCreditOffers(Model model) {
+        model.addAttribute("creditOffers", creditOfferService.getCreditOffers());
+        return "/creditOffers";
     }
-}
+    }

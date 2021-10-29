@@ -12,6 +12,8 @@ import com.haulmont.testtask.repository.CreditRepository;
 import com.haulmont.testtask.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -50,20 +52,18 @@ public class CreditOfferService {
         this.paymentRepository = paymentRepository;
     }
 
-    // долговая часть ежемесячного платежа
     public double deptPart(int creditTime, double sumCredit) {
 
         return sumCredit / creditTime;
 
     }
 
-    //проценты в ежемесячном платеже
+
     public double percent(double remainder, double interestRate) {
 
         return remainder * (interestRate / 100.0 / 12.0);
     }
 
-    //сумма ежемесячного платежа
     public double amountOfMonthlyPayment(int creditTime, double remainder, int sumCredit, double interestRate) {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
@@ -107,7 +107,7 @@ public class CreditOfferService {
                 .orElseThrow(() -> new NoEntityException("credit"));
     }
 
-    public List<Payment> getPaymentsByCreditOfferId(Long id)  {
+    public List<Payment> getPaymentsByCreditOfferId(Long id) {
         return creditOfferRepository.findById(id).get().getChartOfPayments();
     }
 
@@ -119,5 +119,16 @@ public class CreditOfferService {
     public void deleteByCreditId(Long id) {
         creditOfferRepository.findByCredit_Id(id)
                 .ifPresent(creditOfferRepository::delete);
+    }
+
+    public void validate(CreditOfferRequest creditOffer, BindingResult bindingResult) {
+        Credit credit = creditRepository.getById(creditOffer.getCreditId());
+        if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
+            bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
+        }
+    }
+
+    public List<CreditOffer> getCreditOffers() {
+        return creditOfferRepository.findAll();
     }
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link href="/media/examples/link-element-example.css" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>Список кредитных предложений</title>
+    <div>
+        <table class="table table-striped" border="1">
+            <tr>
+                <th scope="col">
+                  Клиент
+                </th>
+                <th scope="col">
+                   Ставка по кредиту
+                </th>
+                <th scope="col">
+                    Сумма
+                </th>
+                <th scope="col">
+                    Срок
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            <tr>
+            <tr th:each="creditOffer : ${creditOffers}">
+                <td th:utext="${creditOffer.getClient().getName()}"></td>
+                <td th:utext="${creditOffer.getCredit().getInterestRate()}"></td>
+                <td th:utext="${creditOffer.getSumCredit()}"></td>
+                <td th:utext="${creditOffer.getSumCredit()}"></td>
+                <td>
+                </td>
+        </tr>
+        </table>
+    </div>
+</head>
+<body>
+
+</body>
+</html>
