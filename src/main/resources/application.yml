@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://host.docker.internal:49153/bank
+    username: postgres
+    password: postgrespw
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
