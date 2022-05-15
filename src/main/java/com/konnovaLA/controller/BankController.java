@@ -37,19 +37,19 @@ public class BankController {
     }
 
     @PostMapping("/editBank")
-    public String addBank (Model model) {
+    public String addBank(Model model) {
         model.addAttribute("bank", new Bank());
         return "editBank";
     }
 
     @PostMapping("/deleteBank/{id}")
-    public String deleteBank (@PathVariable Long id) {
+    public String deleteBank(@PathVariable Long id) {
         bankService.deleteBankById(id);
         return "redirect:/banks";
     }
 
     @GetMapping("/editBank/{id}")
-    public String getBank (@PathVariable Long id, Model model) {
+    public String getBank(@PathVariable Long id, Model model) {
         model.addAttribute("bank", bankService.getBankById(id));
         return "editBank";
     }

@@ -27,13 +27,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByLogin(username);
         return SecurityUser.fromUser(user);
     }
 
 
     public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
+        User userFromDB = userRepository.findByLogin(user.getLogin());
 
         if (userFromDB != null) {
             return false;

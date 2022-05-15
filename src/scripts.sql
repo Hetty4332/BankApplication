@@ -26,10 +26,13 @@ VALUES (1, 1),
 INSERT INTO role(id, name)
 VALUES (1, 'USER');
 
-INSERT INTO PERSON (email, password, status, username)
+INSERT INTO PERSON (email, password, status, login)
 VALUES ('user@test.ru', '$2a$12$bqI3z5vKArCmRHEmFrDPwu.LxNB1h5PUnlniahy03AAZK7kLUd5q6', 'ACTIVE', 'user');
 
 INSERT INTO PERSON_ROLES
 VALUES (1, 1);
- SELECT * FROM person
+-------------------------------------
+delete FROM person_roles;
+delete from person;
+select *FROM person;
 

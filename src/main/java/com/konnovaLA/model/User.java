@@ -14,7 +14,7 @@ public class User {
     @Column(nullable = false)
     private Long id;
     @Column
-    private String username;
+    private String login;
     @Column
     private String password;
     @Column

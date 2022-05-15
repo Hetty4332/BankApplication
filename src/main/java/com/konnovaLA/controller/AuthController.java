@@ -1,9 +1,11 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.model.User;
+
 import com.konnovaLA.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,16 +14,14 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private UserService service;
+    private final UserService service;
 
-    public AuthController(UserService service) {
-        this.service = service;
-    }
 
     @PostMapping("/login")
-    public User getAuthUser() {
+    public com.konnovaLA.model.User getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
             return null;
