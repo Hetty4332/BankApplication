@@ -10,6 +10,7 @@ import com.konnovaLA.model.Client;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.model.CreditOffer;
 import com.konnovaLA.model.Payment;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -22,35 +23,16 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class CreditOfferService {
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-    private CreditRepository creditRepository;
+    private final CreditRepository creditRepository;
 
-    private CreditOfferRepository creditOfferRepository;
+    private final CreditOfferRepository creditOfferRepository;
 
-    private PaymentRepository paymentRepository;
-
-    @Autowired
-    public void setClientRepository(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
-
-    @Autowired
-    public void setCreditRepository(CreditRepository creditRepository) {
-        this.creditRepository = creditRepository;
-    }
-
-    @Autowired
-    public void setCreditOfferRepository(CreditOfferRepository creditOfferRepository) {
-        this.creditOfferRepository = creditOfferRepository;
-    }
-
-    @Autowired
-    public void setPaymentRepository(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
+    private final PaymentRepository paymentRepository;
 
     public double deptPart(int creditTime, double sumCredit) {
 
@@ -87,7 +69,7 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferWeb creditOffer) throws NoEntityException {
+    public CreditOffer saveCreditOffer(CreditOfferWeb creditOffer) {//throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
         Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
@@ -120,7 +102,7 @@ public class CreditOfferService {
                 .ifPresent(creditOfferRepository::delete);
     }
 
-    public void validate(CreditOfferWeb creditOffer, BindingResult bindingResult) {
+    public void validate(CreditOfferWeb creditOffer) {
         Credit credit = creditRepository.getById(creditOffer.getCreditId());
         if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
             bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));

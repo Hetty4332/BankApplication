@@ -1,68 +1,49 @@
 package com.konnovaLA.controller;
 
 import com.konnovaLA.dto.CreditOfferWeb;
+import com.konnovaLA.dto.CreditWeb;
 import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.model.CreditOffer;
 import com.konnovaLA.model.Payment;
 import com.konnovaLA.service.BankService;
 import com.konnovaLA.service.ClientService;
 import com.konnovaLA.service.CreditOfferService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 public class CreditOfferController {
 
-    private CreditOfferService creditOfferService;
+    private final CreditOfferService creditOfferService;
 
-    private ClientService clientService;
+    private final ClientService clientService;
 
-    private BankService bankService;
-
-    @Autowired
-    public void setCreditOfferService(CreditOfferService creditOfferService) {
-        this.creditOfferService = creditOfferService;
-    }
-
-    @Autowired
-    public void setClientService(ClientService clientService) {
-        this.clientService = clientService;
-    }
+    private final BankService bankService;
 
 
-    @Autowired
-    public void setBankService(BankService bankService) {
-        this.bankService = bankService;
-    }
-
-    @GetMapping("/payments/{id}")
-    public String getPayments(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("payments", creditOfferService.getPaymentsByCreditOfferId(id));
-        return "payments";
+    @GetMapping("/getPaymentsByCreditOffer")
+    public List<Payment> getPayments (@PathVariable("id") Long id) {
+      return creditOfferService.getPaymentsByCreditOfferId(id);
     }
 
     @GetMapping("/creditOffer")
-    public String getCreditOffer(Model model) {
-        model.addAttribute("creditOffer", new CreditOfferWeb());
-        model.addAttribute("payment", new Payment());
-        model.addAttribute("clients", clientService.getClients());
-        model.addAttribute("banks", bankService.getBanks());
-        return "creditOffer";
+    public String getCreditOffer() {
+        return "";
     }
 
     @PostMapping("/creditOffer")
-    public String addCreditOffer(Model model, @ModelAttribute("creditOffer") @Valid CreditOfferWeb creditOffer, BindingResult bindingResult) {
+    public String addCreditOffer(@RequestBody @Valid CreditOfferWeb creditOffer, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
+/*        if (bindingResult.hasErrors()) {
             model.addAttribute("clients", clientService.getClients());
             model.addAttribute("banks", bankService.getBanks());
             return "creditOffer";
@@ -73,17 +54,17 @@ public class CreditOfferController {
                 model.addAttribute("banks", bankService.getBanks());
                 return "creditOffer";
             }
-        }
-        CreditOffer save;
-        try {
-            save = creditOfferService.saveCreditOffer(creditOffer);
-        } catch (NoEntityException e) {
+        }*/
+    /*    CreditOffer save;
+        try {*/
+            creditOfferService.saveCreditOffer(creditOffer);
+       /* } catch (NoEntityException e) {
             bindingResult.addError(new FieldError("creditOffer", e.getEntityName() + "Id", "некорректное значение поля"));
             model.addAttribute("clients", clientService.getClients());
             model.addAttribute("banks", bankService.getBanks());
             return "creditOffer";
 
-        }
+        }*/
 
         return "redirect:/payments/" + save.getId();
     }

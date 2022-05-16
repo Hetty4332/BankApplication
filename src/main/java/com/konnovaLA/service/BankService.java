@@ -4,6 +4,7 @@ import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Client;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.repository.BankRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,14 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BankService {
 
-   private BankRepository bankRepository;
+   private final BankRepository bankRepository;
 
-    @Autowired
-    public void setBankRepository(BankRepository bankRepository) {
-        this.bankRepository = bankRepository;
-    }
 
     public List<Bank> getBanks() {
         return bankRepository.findAll();

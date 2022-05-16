@@ -16,7 +16,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
-
     private final UserRepository repository;
 
     public List<User> getAll() {

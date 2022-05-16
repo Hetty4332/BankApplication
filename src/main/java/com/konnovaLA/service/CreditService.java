@@ -5,6 +5,7 @@ import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.repository.BankRepository;
 import com.konnovaLA.repository.CreditRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,35 +14,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CreditService {
 
-    private CreditRepository creditRepository;
+    private final CreditRepository creditRepository;
 
-    private BankService bankService;
+    private final BankService bankService;
 
-    private BankRepository bankRepository;
+    private final BankRepository bankRepository;
 
-    private CreditOfferService creditOfferService;
+    private final CreditOfferService creditOfferService;
 
-    @Autowired
-    public void setCreditRepository(CreditRepository creditRepository) {
-        this.creditRepository = creditRepository;
-    }
-
-    @Autowired
-    public void setBankService(BankService bankService) {
-        this.bankService = bankService;
-    }
-
-    @Autowired
-    public void setBankRepository(BankRepository bankRepository) {
-        this.bankRepository = bankRepository;
-    }
-
-    @Autowired
-    public void setCreditOfferService(CreditOfferService creditOfferService) {
-        this.creditOfferService = creditOfferService;
-    }
 
     public List<CreditWeb> getCredits() {
         List<CreditWeb> creditWebs = new ArrayList<>();
