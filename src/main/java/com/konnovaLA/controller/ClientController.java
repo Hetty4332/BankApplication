@@ -22,9 +22,7 @@ public class ClientController {
 
     @GetMapping
     public List<Client> getClients() {
-        List<Client> clients = new ArrayList<>();
-        clients.addAll(clientService.getClients());
-        return clients;
+        return clientService.getClients();
     }
 
     @PostMapping("/save")

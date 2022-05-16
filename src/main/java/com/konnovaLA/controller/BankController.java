@@ -21,9 +21,7 @@ public class BankController {
 
     @GetMapping
     public List<Bank> getBanks() {
-        List<Bank> banks = new ArrayList<>();
-        banks.addAll(bankService.getBanks());
-        return banks;
+       return bankService.getBanks();
     }
 
     @PostMapping("/save")
