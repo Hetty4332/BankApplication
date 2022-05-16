@@ -14,43 +14,32 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/banks")
 public class BankController {
 
     final private BankService bankService;
 
-    @GetMapping("/banks")
-    public List<Bank> getBanks(Model model) {
+    @GetMapping
+    public List<Bank> getBanks() {
         List<Bank> banks = new ArrayList<>();
         banks.addAll(bankService.getBanks());
-        model.addAttribute("banks", banks);
-        model.addAttribute("bank", new Bank());
         return banks;
     }
 
-    @PostMapping("/edit")
-    public String addBank(@ModelAttribute("bank") @Valid Bank bank, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/editBank";
-        }
+    @PostMapping("/save")
+    public String addBank(@Valid @RequestBody Bank bank) {
         bankService.saveBank(bank);
-        return "redirect:/banks";
+        return "Данные банка успешно сохранены";
     }
 
-    @PostMapping("/editBank")
-    public String addBank(Model model) {
-        model.addAttribute("bank", new Bank());
-        return "editBank";
-    }
-
-    @PostMapping("/deleteBank/{id}")
+    @DeleteMapping("/{id}")
     public String deleteBank(@PathVariable Long id) {
         bankService.deleteBankById(id);
-        return "redirect:/banks";
+        return "Банк с id= "+id+" успешно удален";
     }
 
-    @GetMapping("/editBank/{id}")
-    public String getBank(@PathVariable Long id, Model model) {
-        model.addAttribute("bank", bankService.getBankById(id));
-        return "editBank";
+    @GetMapping("/{id}")
+    public Bank getBank(@PathVariable Long id) {
+        return bankService.getBankById(id);
     }
 }
