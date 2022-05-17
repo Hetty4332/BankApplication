@@ -1,14 +1,9 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.dto.CreditWeb;
-import com.konnovaLA.model.Credit;
-import com.konnovaLA.service.BankService;
+import com.konnovaLA.dto.CreditDtoRequest;
 import com.konnovaLA.service.CreditService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,12 +18,12 @@ public class CreditController {
 
 
     @GetMapping
-    public List<CreditWeb> getCredits() {
+    public List<CreditDtoRequest> getCredits() {
         return creditService.getCredits();
     }
 
     @PostMapping("/save")
-    public String addCredit(@Valid CreditWeb credit) {
+    public String addCredit(@Valid CreditDtoRequest credit) {
         creditService.saveCredit(credit);
         return "Данные о кредите успешно сохранены";
 
@@ -41,7 +36,7 @@ public class CreditController {
     }
 
     @GetMapping("/{id}")
-    public CreditWeb getCredit(@PathVariable Long id, Model model) {
+    public CreditDtoRequest getCredit(@PathVariable Long id, Model model) {
         return creditService.getCreditById(id);
     }
 

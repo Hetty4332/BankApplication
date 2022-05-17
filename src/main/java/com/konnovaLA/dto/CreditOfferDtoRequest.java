@@ -1,15 +1,14 @@
 package com.konnovaLA.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Data
-public class CreditOfferWeb {
+@Builder
+public class CreditOfferDtoRequest {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long clientId;

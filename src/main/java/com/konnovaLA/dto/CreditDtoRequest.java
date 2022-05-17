@@ -1,5 +1,6 @@
 package com.konnovaLA.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -7,7 +8,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CreditWeb {
+@Builder
+public class CreditDtoRequest {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long idBank;

@@ -1,17 +1,11 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditOfferWeb;
+import com.konnovaLA.dto.CreditOfferDtoRequest;
 import com.konnovaLA.exeption.NoEntityException;
-import com.konnovaLA.repository.ClientRepository;
-import com.konnovaLA.repository.CreditOfferRepository;
-import com.konnovaLA.repository.CreditRepository;
-import com.konnovaLA.repository.PaymentRepository;
-import com.konnovaLA.model.Client;
-import com.konnovaLA.model.Credit;
-import com.konnovaLA.model.CreditOffer;
-import com.konnovaLA.model.Payment;
+import com.konnovaLA.mappers.CreditOfferMapper;
+import com.konnovaLA.model.*;
+import com.konnovaLA.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -34,6 +28,8 @@ public class CreditOfferService {
 
     private final PaymentRepository paymentRepository;
 
+    private final CreditOfferMapper creditOfferMapper;
+
     public double deptPart(int creditTime, double sumCredit) {
 
         return sumCredit / creditTime;
@@ -49,7 +45,7 @@ public class CreditOfferService {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
 
-    public List<Payment> getPayments(CreditOfferWeb creditOffer) throws NoEntityException {
+    public List<Payment> getPayments(CreditOfferDtoRequest creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         List<Payment> chartOfPayments = new ArrayList<>();
         int time = creditOffer.getCountMonthCredit();
@@ -69,7 +65,7 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferWeb creditOffer) {//throws NoEntityException {
+    public CreditOffer saveCreditOffer(CreditOfferDtoRequest creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
         Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
@@ -102,28 +98,19 @@ public class CreditOfferService {
                 .ifPresent(creditOfferRepository::delete);
     }
 
-    public void validate(CreditOfferWeb creditOffer) {
+    public void validate(CreditOfferDtoRequest creditOffer, BindingResult bindingResult) {
         Credit credit = creditRepository.getById(creditOffer.getCreditId());
         if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
             bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
         }
     }
 
-   /* public List<CreditOffer> getCreditOffers() {
-        List<CreditOfferWeb> creditOfferWebs = new ArrayList<>();
+    public List<CreditOfferDtoRequest> getCreditOffers() {
+        List<CreditOfferDtoRequest> creditOfferWebs = new ArrayList<>();
         List<CreditOffer> creditOffers = creditOfferRepository.findAll();
         for (CreditOffer value : creditOffers) {
-            CreditOfferWeb creditOfferWeb = new CreditOfferWeb();
-            CreditOffer creditOffer = value;
-            creditOfferWeb.setId(creditOffer.getId());
-            creditOfferWeb.setSumCredit(creditOffer.getSumCredit());
-            //TODO Нужно доделать
-            String bankName = bankRepository.findBankByCreditsContains(credit)
-                    .map(Bank::getName)
-                    .orElse("банк не найден!");
-            creditWeb.setBankName(bankName);
-            creditWebs.add(creditWeb);
+            creditOfferWebs.add(creditOfferMapper.toDto(value));
         }
-        return creditWebs;
-    }*/
+        return creditOfferWebs;
+    }
 }

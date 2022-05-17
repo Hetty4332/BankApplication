@@ -1,12 +1,11 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditWeb;
+import com.konnovaLA.dto.CreditDtoRequest;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.repository.BankRepository;
 import com.konnovaLA.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,11 +25,11 @@ public class CreditService {
     private final CreditOfferService creditOfferService;
 
 
-    public List<CreditWeb> getCredits() {
-        List<CreditWeb> creditWebs = new ArrayList<>();
+    public List<CreditDtoRequest> getCredits() {
+        List<CreditDtoRequest> creditWebs = new ArrayList<>();
         List<Credit> credits = creditRepository.findAll();
         for (Credit value : credits) {
-            CreditWeb creditWeb = new CreditWeb();
+            CreditDtoRequest creditWeb = new CreditDtoRequest();
             Credit credit = value;
             creditWeb.setId(credit.getId());
             creditWeb.setInterestRate(credit.getInterestRate());
@@ -44,7 +43,7 @@ public class CreditService {
         return creditWebs;
     }
 
-    public void saveCredit(CreditWeb credit) {
+    public void saveCredit(CreditDtoRequest credit) {
         Credit saveCredit = new Credit();
         saveCredit.setId(credit.getId());
         saveCredit.setCreditLimit(credit.getCreditLimit());
@@ -67,9 +66,9 @@ public class CreditService {
         creditRepository.deleteById(id);
     }
 
-    public CreditWeb getCreditById(Long id) {
+    public CreditDtoRequest getCreditById(Long id) {
         Credit credit = creditRepository.findById(id).orElse(new Credit());
-        CreditWeb creditWeb = new CreditWeb();
+        CreditDtoRequest creditWeb = new CreditDtoRequest();
         creditWeb.setId(credit.getId());
         creditWeb.setCreditLimit(credit.getCreditLimit());
         creditWeb.setInterestRate(credit.getInterestRate());

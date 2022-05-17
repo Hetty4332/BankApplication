@@ -19,6 +19,6 @@ public class CreditOffer {
     @Column
     private int sumCredit;
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Payment> chartOfPayments;
+    private List<Payment> chartOfPayments;//график платежей
 
 }
