@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class CreditDtoRequest {
+public class CreditDto {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long idBank;

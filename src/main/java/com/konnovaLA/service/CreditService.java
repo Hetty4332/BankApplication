@@ -1,6 +1,7 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditDtoRequest;
+import com.konnovaLA.dto.CreditDto;
+import com.konnovaLA.mappers.CreditMapper;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.repository.BankRepository;
@@ -20,35 +21,22 @@ public class CreditService {
 
     private final BankService bankService;
 
-    private final BankRepository bankRepository;
-
     private final CreditOfferService creditOfferService;
 
+    private final CreditMapper creditMapper;
 
-    public List<CreditDtoRequest> getCredits() {
-        List<CreditDtoRequest> creditWebs = new ArrayList<>();
+
+    public List<CreditDto> getCredits() {
+        List<CreditDto> creditWebs = new ArrayList<>();
         List<Credit> credits = creditRepository.findAll();
         for (Credit value : credits) {
-            CreditDtoRequest creditWeb = new CreditDtoRequest();
-            Credit credit = value;
-            creditWeb.setId(credit.getId());
-            creditWeb.setInterestRate(credit.getInterestRate());
-            creditWeb.setCreditLimit(credit.getCreditLimit());
-            String bankName = bankRepository.findBankByCreditsContains(credit)
-                    .map(Bank::getName)
-                    .orElse("банк не найден!");
-            creditWeb.setBankName(bankName);
-            creditWebs.add(creditWeb);
+            creditWebs.add(creditMapper.toDto(value));
         }
         return creditWebs;
     }
 
-    public void saveCredit(CreditDtoRequest credit) {
-        Credit saveCredit = new Credit();
-        saveCredit.setId(credit.getId());
-        saveCredit.setCreditLimit(credit.getCreditLimit());
-        saveCredit.setInterestRate(credit.getInterestRate());
-        saveCredit = creditRepository.save(saveCredit);
+    public void saveCredit(CreditDto credit) {
+        Credit saveCredit = creditRepository.save(creditMapper.fromDto(credit));
         Bank bank = bankService.getBankById(credit.getIdBank());
         if (!bank.getCredits().contains(saveCredit)) {
             bank.getCredits().add(saveCredit);
@@ -66,12 +54,8 @@ public class CreditService {
         creditRepository.deleteById(id);
     }
 
-    public CreditDtoRequest getCreditById(Long id) {
+    public CreditDto getCreditById(Long id) {
         Credit credit = creditRepository.findById(id).orElse(new Credit());
-        CreditDtoRequest creditWeb = new CreditDtoRequest();
-        creditWeb.setId(credit.getId());
-        creditWeb.setCreditLimit(credit.getCreditLimit());
-        creditWeb.setInterestRate(credit.getInterestRate());
-        return creditWeb;
+        return creditMapper.toDto(credit);
     }
 }

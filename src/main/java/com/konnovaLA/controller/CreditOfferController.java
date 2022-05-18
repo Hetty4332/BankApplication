@@ -24,13 +24,14 @@ public class CreditOfferController {
     private final CreditOfferService creditOfferService;
 
 
-    @GetMapping("/getPaymentsByCreditOffer")
+    @GetMapping("/getPaymentsByCreditOffer/{id}")
     public List<Payment> getPayments(@PathVariable("id") Long id) {
         return creditOfferService.getPaymentsByCreditOfferId(id);
     }
 
     @GetMapping("/creditOffer")
     public String getCreditOffer() {
+
 /*        model.addAttribute("creditOffer", new CreditOfferRequest());
         model.addAttribute("payment", new Payment());
         model.addAttribute("clients", clientService.getClients());
@@ -38,7 +39,7 @@ public class CreditOfferController {
         return "";
     }
 
-    @PostMapping("/creditOffer")
+    @PostMapping("/saveCreditOffer")
     public String addCreditOffer(@RequestBody @Valid CreditOfferDtoRequest creditOffer, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -47,9 +48,8 @@ public class CreditOfferController {
             creditOfferService.validate(creditOffer, bindingResult);
 
         }
-        CreditOffer save;
         try {
-            save = creditOfferService.saveCreditOffer(creditOffer);
+            creditOfferService.saveCreditOffer(creditOffer);
         } catch (NoEntityException e) {
 
             // bindingResult.addError(new FieldError("creditOffer", e.getEntityName() + "Id", "некорректное значение поля"));
