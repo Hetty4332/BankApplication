@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BankService {
 
-   private final BankRepository bankRepository;
+    private final BankRepository bankRepository;
 
 
     public List<Bank> getBanks() {
@@ -37,7 +37,7 @@ public class BankService {
 
     public void deleteCreditInBank(Credit credit) {
         Optional<Bank> bankOptional = bankRepository.findBankByCreditsContains(credit);
-        if (bankOptional.isEmpty()){
+        if (bankOptional.isEmpty()) {
             return;
         }
         Bank bank = bankOptional.get();
@@ -47,7 +47,7 @@ public class BankService {
 
     public void deleteClientInBank(Client client) {
         Optional<Bank> bankOptional = bankRepository.findBankByClientsContains(client);
-        if (bankOptional.isEmpty()){
+        if (bankOptional.isEmpty()) {
             return;
         }
         Bank bank = bankOptional.get();

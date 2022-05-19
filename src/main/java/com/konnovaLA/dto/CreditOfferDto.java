@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class CreditOfferDtoRequest {
+public class CreditOfferDto {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long clientId;

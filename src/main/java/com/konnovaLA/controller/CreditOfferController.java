@@ -1,16 +1,12 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.dto.CreditOfferDtoRequest;
+import com.konnovaLA.dto.CreditOfferDto;
 import com.konnovaLA.exeption.NoEntityException;
-import com.konnovaLA.model.CreditOffer;
 import com.konnovaLA.model.Payment;
-import com.konnovaLA.service.BankService;
-import com.konnovaLA.service.ClientService;
 import com.konnovaLA.service.CreditOfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,21 +36,18 @@ public class CreditOfferController {
     }
 
     @PostMapping("/saveCreditOffer")
-    public String addCreditOffer(@RequestBody @Valid CreditOfferDtoRequest creditOffer, BindingResult bindingResult) {
+    public String addCreditOffer(@RequestBody @Valid CreditOfferDto creditOffer, BindingResult bindingResult) throws NoEntityException {
 
         if (bindingResult.hasErrors()) {
             return "Некорректные данные";
         } else {
             creditOfferService.validate(creditOffer, bindingResult);
 
-        }
-        try {
-            creditOfferService.saveCreditOffer(creditOffer);
-        } catch (NoEntityException e) {
-
-            // bindingResult.addError(new FieldError("creditOffer", e.getEntityName() + "Id", "некорректное значение поля"));
-            return "Некорректные данные";
-
+        }try{
+            creditOfferService.saveCreditOffer(creditOffer);}
+        catch (Exception e)
+        {
+            throw new NoEntityException("Credit Offer");
         }
 
         return "Кредитное предложение успешно сохранено";

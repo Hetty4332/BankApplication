@@ -1,6 +1,6 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditOfferDtoRequest;
+import com.konnovaLA.dto.CreditOfferDto;
 import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.mappers.CreditOfferMapper;
 import com.konnovaLA.model.*;
@@ -45,7 +45,7 @@ public class CreditOfferService {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
 
-    public List<Payment> getPayments(CreditOfferDtoRequest creditOffer) throws NoEntityException {
+    public List<Payment> getPayments(CreditOfferDto creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         List<Payment> chartOfPayments = new ArrayList<>();
         int time = creditOffer.getCountMonthCredit();
@@ -65,7 +65,7 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferDtoRequest creditOffer) throws NoEntityException {
+    public CreditOffer saveCreditOffer(CreditOfferDto creditOffer) throws NoEntityException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
         Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
@@ -98,15 +98,15 @@ public class CreditOfferService {
                 .ifPresent(creditOfferRepository::delete);
     }
 
-    public void validate(CreditOfferDtoRequest creditOffer, BindingResult bindingResult) {
+    public void validate(CreditOfferDto creditOffer, BindingResult bindingResult) {
         Credit credit = creditRepository.getById(creditOffer.getCreditId());
         if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
             bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
         }
     }
 
-    public List<CreditOfferDtoRequest> getCreditOffers() {
-        List<CreditOfferDtoRequest> creditOfferWebs = new ArrayList<>();
+    public List<CreditOfferDto> getCreditOffers() {
+        List<CreditOfferDto> creditOfferWebs = new ArrayList<>();
         List<CreditOffer> creditOffers = creditOfferRepository.findAll();
         for (CreditOffer value : creditOffers) {
             creditOfferWebs.add(creditOfferMapper.toDto(value));
