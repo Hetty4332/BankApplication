@@ -6,7 +6,8 @@ VALUES ('Тинькофф'),
 INSERT INTO client(email, name, passport_number, phone_number)
 VALUES ('pushkin@mail.ru', 'Александр Сергеевич Пушкин', '1234567890', '555555'),
        ('mocart@google.com', 'Вольфганг Амадей Моцарт', '0987456123', '444444'),
-       ('butusov@yandex.ru', 'Вячеслав Геннадьевич Бутусов', '123654789', '333333');
+       ('butusov@yandex.ru', 'Вячеслав Геннадьевич Бутусов', '123654789', '333333'),
+       ('geralt@yandex.ru', 'Геральт из Ривии', '123654789', '888888');
 
 INSERT INTO credit(id, credit_limit, interest_rate)
 VALUES (1, 10000, 15),
@@ -24,15 +25,24 @@ VALUES (1, 1),
        (3, 3);
 
 INSERT INTO role(id, name)
-VALUES (1, 'USER');
+VALUES (1, 'ROLE_USER'),
+(2, 'ROLE_ADMIN');
 
 INSERT INTO PERSON (email, password, status, login)
-VALUES ('user@test.ru', '$2a$12$bqI3z5vKArCmRHEmFrDPwu.LxNB1h5PUnlniahy03AAZK7kLUd5q6', 'ACTIVE', 'user');
+VALUES ('apiUser@test.ru', '$2a$12$bqI3z5vKArCmRHEmFrDPwu.LxNB1h5PUnlniahy03AAZK7kLUd5q6', 'ACTIVE', 'apiUser2');
 
 INSERT INTO PERSON_ROLES
-VALUES (1, 1);
+VALUES (16, 2);
 -------------------------------------
-delete FROM person_roles;
-delete from person;
+select * FROM person_roles;
+delete from person_roles
 select *FROM person;
+select * from bank_clients;
+select * from role;
+delete from person_roles where api_user_id=10
+INSERT INTO role(id, name)
+VALUES (2, 'ADMIN');
+delete from role
+delete from person
+
 

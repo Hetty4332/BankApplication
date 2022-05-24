@@ -1,4 +1,4 @@
-package com.konnovaLA.dto;
+package com.konnovaLA.entities;
 
 import lombok.Builder;
 import lombok.Data;

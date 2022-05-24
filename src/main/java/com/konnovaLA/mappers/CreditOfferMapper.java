@@ -1,6 +1,6 @@
 package com.konnovaLA.mappers;
 
-import com.konnovaLA.dto.CreditOfferDto;
+import com.konnovaLA.entities.CreditOfferDto;
 import com.konnovaLA.model.CreditOffer;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,10 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.model.User;
+import com.konnovaLA.model.ApiUser;
 import com.konnovaLA.repository.UserRepository;
+import com.konnovaLA.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,24 +16,26 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+@Log4j2
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository repository;
 
-    public List<User> getAll() {
+    public List<ApiUser> getAll() {
         return this.repository.findAll();
     }
 
-    public User getByLogin(String login) {
+    public ApiUser getByLogin(String login) {
         return this.repository.findByLogin(login);
     }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User u = getByLogin(login);
+        ApiUser u = getByLogin(login);
         if (Objects.isNull(u)) {
+            log.error(String.format("User %s is not found", login));
             throw new UsernameNotFoundException(String.format("User %s is not found", login));
         }
-        return new org.springframework.security.core.userdetails.User(u.getLogin(), u.getPassword(), true, true, true, true, new HashSet<>());
+        return SecurityUser.fromUser(u);
     }
 }

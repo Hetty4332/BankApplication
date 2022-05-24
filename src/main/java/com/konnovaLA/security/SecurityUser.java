@@ -1,8 +1,8 @@
 package com.konnovaLA.security;
 
 
+import com.konnovaLA.model.ApiUser;
 import com.konnovaLA.model.Status;
-import com.konnovaLA.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -64,14 +64,15 @@ public class SecurityUser implements UserDetails {
         return isActive;
     }
 
-    public static UserDetails fromUser(User user) {
+    public static UserDetails fromUser(ApiUser apiUser) {
         return new org.springframework.security.core.userdetails.User(
-                user.getLogin(), user.getPassword(),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getStatus().equals(Status.ACTIVE),
-                user.getRoles()
+                apiUser.getLogin(),
+                apiUser.getPassword(),
+                apiUser.getStatus().equals(Status.ACTIVE),
+                apiUser.getStatus().equals(Status.ACTIVE),
+                apiUser.getStatus().equals(Status.ACTIVE),
+                apiUser.getStatus().equals(Status.ACTIVE),
+                apiUser.getRoles()
         );
     }
 

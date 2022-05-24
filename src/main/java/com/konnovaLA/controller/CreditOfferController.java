@@ -1,6 +1,6 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.dto.CreditOfferDto;
+import com.konnovaLA.entities.CreditOfferDto;
 import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.model.Payment;
 import com.konnovaLA.service.CreditOfferService;

@@ -1,10 +1,9 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditDto;
+import com.konnovaLA.entities.CreditDto;
 import com.konnovaLA.mappers.CreditMapper;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
-import com.konnovaLA.repository.BankRepository;
 import com.konnovaLA.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.konnovaLA.mappers;
 
-import com.konnovaLA.dto.CreditDto;
+import com.konnovaLA.entities.CreditDto;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
 import com.konnovaLA.repository.BankRepository;

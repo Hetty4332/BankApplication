@@ -1,6 +1,6 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.dto.CreditOfferDto;
+import com.konnovaLA.entities.CreditOfferDto;
 import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.mappers.CreditOfferMapper;
 import com.konnovaLA.model.*;

@@ -1,7 +1,7 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.model.User;
-import com.konnovaLA.service.UserService;
+import com.konnovaLA.model.ApiUser;
+import com.konnovaLA.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,10 +13,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    private final CustomUserDetailsService service;
 
     @GetMapping("/users")
-    public @ResponseBody List<User> getAll() {
+    public @ResponseBody List<ApiUser> getAll() {
         return this.service.getAll();
     }
 }

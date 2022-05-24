@@ -1,9 +1,8 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.dto.CreditDto;
+import com.konnovaLA.entities.CreditDto;
 import com.konnovaLA.service.CreditService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
