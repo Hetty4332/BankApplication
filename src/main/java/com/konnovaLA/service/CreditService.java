@@ -1,9 +1,10 @@
 package com.konnovaLA.service;
 
 import com.konnovaLA.entities.CreditDto;
-import com.konnovaLA.mappers.CreditMapper;
+import com.konnovaLA.mappers.mapperInterface.CreditMapper;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Credit;
+import com.konnovaLA.repository.BankRepository;
 import com.konnovaLA.repository.CreditRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,24 @@ public class CreditService {
 
     private final CreditMapper creditMapper;
 
+    private final BankRepository bankRepository;
+
+
 
     public List<CreditDto> getCredits() {
         List<CreditDto> creditWebs = new ArrayList<>();
         List<Credit> credits = creditRepository.findAll();
         for (Credit value : credits) {
-            creditWebs.add(creditMapper.toDto(value));
+           String bankName= bankRepository.findBankByCreditsContains(value)
+                    .map(Bank::getName)
+                    .orElse("банк не найден!");
+            creditWebs.add(creditMapper.creditToDto(value,bankName));
         }
         return creditWebs;
     }
 
     public void saveCredit(CreditDto credit) {
-        Credit saveCredit = creditRepository.save(creditMapper.fromDto(credit));
+        Credit saveCredit = creditRepository.save(creditMapper.creditFromDto(credit));
         Bank bank = bankService.getBankById(credit.getIdBank());
         if (!bank.getCredits().contains(saveCredit)) {
             bank.getCredits().add(saveCredit);
@@ -55,6 +62,9 @@ public class CreditService {
 
     public CreditDto getCreditById(Long id) {
         Credit credit = creditRepository.findById(id).orElse(new Credit());
-        return creditMapper.toDto(credit);
+        String bankName= bankRepository.findBankByCreditsContains(credit)
+                .map(Bank::getName)
+                .orElse("банк не найден!");
+        return creditMapper.creditToDto(credit,bankName);
     }
 }

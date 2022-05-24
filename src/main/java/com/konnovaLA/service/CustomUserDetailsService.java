@@ -1,5 +1,6 @@
 package com.konnovaLA.service;
 
+import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.model.ApiUser;
 import com.konnovaLA.repository.UserRepository;
 import com.konnovaLA.security.SecurityUser;
@@ -26,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public ApiUser getByLogin(String login) {
-        return this.repository.findByLogin(login);
+        return this.repository.findByLogin(login).orElseThrow(()->new NoEntityException("ApiUser"));
     }
 
     @Override

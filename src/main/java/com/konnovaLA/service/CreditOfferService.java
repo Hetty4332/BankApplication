@@ -2,7 +2,7 @@ package com.konnovaLA.service;
 
 import com.konnovaLA.entities.CreditOfferDto;
 import com.konnovaLA.exeption.NoEntityException;
-import com.konnovaLA.mappers.CreditOfferMapper;
+import com.konnovaLA.mappers.mapperInterface.CreditOfferMapper;
 import com.konnovaLA.model.*;
 import com.konnovaLA.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -109,7 +109,7 @@ public class CreditOfferService {
         List<CreditOfferDto> creditOfferWebs = new ArrayList<>();
         List<CreditOffer> creditOffers = creditOfferRepository.findAll();
         for (CreditOffer value : creditOffers) {
-            creditOfferWebs.add(creditOfferMapper.toDto(value));
+            creditOfferWebs.add(creditOfferMapper.creditOfferToDto((value)));
         }
         return creditOfferWebs;
     }

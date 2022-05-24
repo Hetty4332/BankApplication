@@ -12,8 +12,8 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mappings({
-            @Mapping(target = "roles", source = "userRoles")})
+
+    @Mapping(target = "roles", source = "userRoles")
     ApiUser requestToUser(UserRequest request, Set<Role> userRoles);
 
 }

@@ -29,7 +29,6 @@ public class RegistrationController {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
 
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public String addUser(@Valid @RequestBody UserRequest request, BindingResult bindingResult) {
         Set<Role> userRoles = new HashSet<>();
@@ -41,9 +40,9 @@ public class RegistrationController {
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
             bindingResult.addError(new FieldError("userForm", "passwordConfirm", "Пароли не совпадают"));
         }
- /*       if (!userService.saveUser(user)) {
+        if (userRepository.findByLogin(user.getLogin()).isEmpty()) {
             bindingResult.addError(new FieldError("userForm", "username", "Пользователь с таким именем уже существует"));
-        }*/
+        }
         userRepository.save(user);
         return "Регистрация нового пользователя произошла успешно";
     }
