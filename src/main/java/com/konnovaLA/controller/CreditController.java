@@ -1,8 +1,11 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.entities.CreditDto;
+import com.konnovaLA.entities.request.CreditRequest;
+import com.konnovaLA.exeption.ApiException;
 import com.konnovaLA.service.CreditService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,25 +20,25 @@ public class CreditController {
 
 
     @GetMapping
-    public List<CreditDto> getCredits() {
+    public List<CreditRequest> getCredits() {
         return creditService.getCredits();
     }
 
     @PostMapping("/save")
-    public String addCredit(@Valid CreditDto credit) {
+    public ResponseEntity<String> addCredit(@Valid CreditRequest credit) throws ApiException {
         creditService.saveCredit(credit);
-        return "Данные о кредите успешно сохранены";
+        return new ResponseEntity<>("Данные о кредите успешно сохранены", HttpStatus.OK);
 
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCredit(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCredit(@PathVariable Long id) {
         creditService.deleteCreditById(id);
-        return "Кредит с id= +" + id + " успешно удален";
+        return new ResponseEntity<>("Кредит с id= +" + id + " успешно удален",HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public CreditDto getCredit(@PathVariable Long id) {
+    public CreditRequest getCredit(@PathVariable Long id) throws ApiException {
         return creditService.getCreditById(id);
     }
 

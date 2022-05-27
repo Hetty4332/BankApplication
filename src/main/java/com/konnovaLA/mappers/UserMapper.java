@@ -1,4 +1,4 @@
-package com.konnovaLA.mappers.mapperInterface;
+package com.konnovaLA.mappers;
 
 import com.konnovaLA.model.ApiUser;
 import com.konnovaLA.model.Role;

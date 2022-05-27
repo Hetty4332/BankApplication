@@ -3,6 +3,7 @@ package com.konnovaLA.service;
 import com.konnovaLA.model.Client;
 import com.konnovaLA.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,16 +42,17 @@ public class ClientService {
     }
 
     public void deleteClientById(Long id) {
-        Optional<Client> client = clientRepository.findById(id);
-        if (client.isEmpty()) {
-            return;
-        }
-        bankService.deleteClientInBank(client.get());
-        creditOfferService.deleteByUser(id);
-        clientRepository.deleteById(id);
+        clientRepository.findById(id)
+                .ifPresent(client ->
+                {
+                    bankService.deleteClientInBank(client);
+                    creditOfferService.deleteByUser(id);
+                    clientRepository.deleteById(id);
+                });
+
     }
 
-    public Client getClientById(Long id) {
-        return clientRepository.findById(id).orElse(new Client());
+    public Optional<Client> getClientById(Long id) {
+        return clientRepository.findById(id);
     }
 }

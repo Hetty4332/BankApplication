@@ -1,32 +1,44 @@
 package com.konnovaLA.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
-@Data
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     @Column
-    @NotBlank
-    @Size(max=50)
     private String name;
     @Column
-    @NotBlank
     private String phoneNumber;
     @Column
-    @Email
     private String email;
     @Column
-    @NotBlank
-    @Size(max=10,min = 10)
     private String passportNumber;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Client)) return false;
+        Client client = (Client) o;
+        return name.equals(client.name) && Objects.equals(phoneNumber, client.phoneNumber) && Objects.equals(email, client.email) && Objects.equals(passportNumber, client.passportNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, phoneNumber, email, passportNumber);
+    }
 }

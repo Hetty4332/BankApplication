@@ -1,6 +1,5 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.exeption.NoEntityException;
 import com.konnovaLA.model.ApiUser;
 import com.konnovaLA.repository.UserRepository;
 import com.konnovaLA.security.SecurityUser;
@@ -11,9 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +24,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         return this.repository.findAll();
     }
 
-    public ApiUser getByLogin(String login) {
-        return this.repository.findByLogin(login).orElseThrow(()->new NoEntityException("ApiUser"));
+    public Optional<ApiUser> getByLogin(String login) {
+        return repository.findByLogin(login);
     }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        ApiUser u = getByLogin(login);
-        if (Objects.isNull(u)) {
-            log.error(String.format("User %s is not found", login));
-            throw new UsernameNotFoundException(String.format("User %s is not found", login));
-        }
+        ApiUser u = getByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User %s is not found", login)));
         return SecurityUser.fromUser(u);
     }
 }

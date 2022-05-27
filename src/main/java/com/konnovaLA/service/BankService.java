@@ -1,5 +1,6 @@
 package com.konnovaLA.service;
 
+import com.konnovaLA.exeption.ApiException;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.model.Client;
 import com.konnovaLA.model.Credit;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,28 +32,24 @@ public class BankService {
         bankRepository.deleteById(id);
     }
 
-    public Bank getBankById(Long id) {
-        return bankRepository.findById(id).orElse(new Bank());
+    public Bank getBankById(Long id) throws ApiException {
+        return bankRepository.findById(id)
+                .orElseThrow(()->new ApiException("Ошибка при поиске объекта"));
     }
-
 
     public void deleteCreditInBank(Credit credit) {
         Optional<Bank> bankOptional = bankRepository.findBankByCreditsContains(credit);
-        if (bankOptional.isEmpty()) {
-            return;
-        }
-        Bank bank = bankOptional.get();
-        bank.getCredits().remove(credit);
-        bankRepository.save(bank);
+        bankOptional.ifPresent(bank1 -> {
+            bank1.getCredits().remove(credit);
+            bankRepository.save(bank1);
+        });
     }
 
     public void deleteClientInBank(Client client) {
         Optional<Bank> bankOptional = bankRepository.findBankByClientsContains(client);
-        if (bankOptional.isEmpty()) {
-            return;
-        }
-        Bank bank = bankOptional.get();
-        bank.getClients().remove(client);
-        bankRepository.save(bank);
+        bankOptional.ifPresent(bank1 -> {
+            bank1.getClients().remove(client);
+            bankRepository.save(bank1);
+        });
     }
 }

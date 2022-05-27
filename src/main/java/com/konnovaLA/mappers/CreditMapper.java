@@ -1,16 +1,15 @@
-package com.konnovaLA.mappers.mapperInterface;
+package com.konnovaLA.mappers;
 
-import com.konnovaLA.entities.CreditDto;
+import com.konnovaLA.entities.request.CreditRequest;
 import com.konnovaLA.model.Credit;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface CreditMapper {
     @Mapping(target = "bankName", source = "bankName")
-    CreditDto creditToDto(Credit credit, String bankName);
+    CreditRequest creditToDto(Credit credit, String bankName);
 
-    Credit creditFromDto(CreditDto dto);
+    Credit creditFromDto(CreditRequest dto);
 
 }

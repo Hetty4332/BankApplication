@@ -1,8 +1,11 @@
 package com.konnovaLA.controller;
 
+import com.konnovaLA.exeption.ApiException;
 import com.konnovaLA.model.Bank;
 import com.konnovaLA.service.BankService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,23 +24,24 @@ public class BankController {
 
     @GetMapping
     public List<Bank> getBanks() {
-       return bankService.getBanks();
+        return bankService.getBanks();
     }
 
     @PostMapping("/save")
-    public String addBank(@Valid @RequestBody Bank bank) {
+    public ResponseEntity<String> addBank(@Valid @RequestBody Bank bank) {
         bankService.saveBank(bank);
-        return "Данные банка успешно сохранены";
+        return new ResponseEntity<>("Данные банка успешно сохранены", HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
-    public String deleteBank(@PathVariable Long id) {
+    public ResponseEntity<String> deleteBank(@PathVariable Long id) {
         bankService.deleteBankById(id);
-        return "Банк с id= "+id+" успешно удален";
+        return new ResponseEntity<>("Банк с id= " + id + " успешно удален", HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Bank getBank(@PathVariable Long id) {
-        return bankService.getBankById(id);
+    public ResponseEntity<Bank> getBank(@PathVariable Long id) throws ApiException {
+        return new ResponseEntity<>(bankService.getBankById(id), HttpStatus.OK);
     }
 }

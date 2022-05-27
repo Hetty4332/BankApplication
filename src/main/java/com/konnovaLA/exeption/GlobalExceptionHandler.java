@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
@@ -34,29 +32,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({AuthenticationException.class, MissingCsrfTokenException.class, InvalidCsrfTokenException.class, SessionAuthenticationException.class})
-    public ErrorInfo handleAuthenticationException(RuntimeException ex, HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<String> handleAuthenticationException(HttpServletResponse response) {
         this.tokenRepository.clearToken(response);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        return new ErrorInfo(UrlUtils.buildFullRequestUrl(request), "error.authorization");
-    }
-    @ExceptionHandler(NoEntityException.class)
-    public ResponseEntity<Object> handleNoEntityException(
-            NoEntityException ex, WebRequest request) {
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Entity" + ex.getEntityName() + " not found");
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("error.authorization", HttpStatus.UNAUTHORIZED);
     }
 
-    @Getter
-    public class ErrorInfo  {
-        private final String url;
-        private final String info;
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<String> handleNoEntityException(
+            ApiException ex) {
+        return new ResponseEntity<>(ex.getMesssage(), HttpStatus.NOT_FOUND);// TODO: здесь нужно переделать логику обработки
 
-        ErrorInfo(String url, String info) {
-            this.url = url;
-            this.info = info;
-        }
-    }
+}
 }

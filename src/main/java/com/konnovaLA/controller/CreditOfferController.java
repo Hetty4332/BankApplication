@@ -1,12 +1,13 @@
 package com.konnovaLA.controller;
 
-import com.konnovaLA.entities.CreditOfferDto;
-import com.konnovaLA.exeption.NoEntityException;
+import com.konnovaLA.entities.request.CreditOfferRequest;
+import com.konnovaLA.exeption.ApiException;
 import com.konnovaLA.model.Payment;
 import com.konnovaLA.service.CreditOfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,25 +33,27 @@ public class CreditOfferController {
         model.addAttribute("payment", new Payment());
         model.addAttribute("clients", clientService.getClients());
         model.addAttribute("banks", bankService.getBanks());*/
+        //TODO: доделать метод
         return "";
     }
 
     @PostMapping("/saveCreditOffer")
-    public String addCreditOffer(@RequestBody @Valid CreditOfferDto creditOffer, BindingResult bindingResult) throws NoEntityException {
+    public ResponseEntity<String> addCreditOffer(@RequestBody @Valid CreditOfferRequest creditOffer) throws ApiException {
 
-        if (bindingResult.hasErrors()) {
-            return "Некорректные данные";
+        String message;
+        if (!creditOfferService.validate(creditOffer).isEmpty()) {
+            message = creditOfferService.validate(creditOffer);
         } else {
-            creditOfferService.validate(creditOffer, bindingResult);
+            try {
+                creditOfferService.saveCreditOffer(creditOffer);
+                message = "Кредитное предложение успешно сохранено";
 
-        }try{
-            creditOfferService.saveCreditOffer(creditOffer);}
-        catch (Exception e)
-        {
-            throw new NoEntityException("Credit Offer");
+            } catch (Exception e) {
+                throw new ApiException("Ошибка при сохранении объекта");
+            }
         }
 
-        return "Кредитное предложение успешно сохранено";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 }

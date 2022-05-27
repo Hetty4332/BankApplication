@@ -1,4 +1,4 @@
-package com.konnovaLA.entities;
+package com.konnovaLA.entities.request;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Builder
-public class CreditOfferDto {
+public class CreditOfferRequest {
     private Long id;
     @Min(value = 0, message = "Не должно быть пустым")
     private Long clientId;

@@ -1,26 +1,23 @@
 package com.konnovaLA.service;
 
-import com.konnovaLA.entities.CreditOfferDto;
-import com.konnovaLA.exeption.NoEntityException;
-import com.konnovaLA.mappers.mapperInterface.CreditOfferMapper;
+import com.konnovaLA.entities.request.CreditOfferRequest;
+import com.konnovaLA.exeption.ApiException;
+import com.konnovaLA.mappers.CreditOfferMapper;
 import com.konnovaLA.model.*;
 import com.konnovaLA.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
 public class CreditOfferService {
 
-    private final ClientRepository clientRepository;
+    private final ClientService clientService;
 
     private final CreditRepository creditRepository;
 
@@ -45,7 +42,7 @@ public class CreditOfferService {
         return deptPart(creditTime, sumCredit) + percent(remainder, interestRate);
     }
 
-    public List<Payment> getPayments(CreditOfferDto creditOffer) throws NoEntityException {
+    public List<Payment> getPayments(CreditOfferRequest creditOffer) throws ApiException {
         Credit credit = getCreditById(creditOffer.getCreditId());
         List<Payment> chartOfPayments = new ArrayList<>();
         int time = creditOffer.getCountMonthCredit();
@@ -65,27 +62,33 @@ public class CreditOfferService {
         return chartOfPayments;
     }
 
-    public CreditOffer saveCreditOffer(CreditOfferDto creditOffer) throws NoEntityException {
+    public void saveCreditOffer(CreditOfferRequest creditOffer) throws ApiException {
         Credit credit = getCreditById(creditOffer.getCreditId());
-        Optional<Client> clientOptional = clientRepository.findById(creditOffer.getClientId());
-        Client client = clientOptional.orElseThrow(() -> new NoEntityException("client"));
-        List<Payment> chartOfPayments = new ArrayList<>();
-        chartOfPayments.addAll(getPayments(creditOffer));
+        Client client = clientService.getClientById(creditOffer.getClientId()).orElseThrow(() -> new ApiException("Ошибка при поиске объекта"));
+        List<Payment> chartOfPayments = new ArrayList<>(getPayments(creditOffer));
+        CreditOffer saveCreditOffer = getSaveCreditOffer(creditOffer, credit, client, chartOfPayments);
+        creditOfferRepository.save(saveCreditOffer);
+    }
+
+    private CreditOffer getSaveCreditOffer(CreditOfferRequest creditOffer, Credit credit, Client client, List<Payment> chartOfPayments) {
         CreditOffer saveCreditOffer = new CreditOffer();
         saveCreditOffer.setChartOfPayments(chartOfPayments);
         saveCreditOffer.setCredit(credit);
         saveCreditOffer.setClient(client);
         saveCreditOffer.setSumCredit(creditOffer.getSumCredit());
-        return creditOfferRepository.save(saveCreditOffer);
+        return saveCreditOffer;
     }
 
-    private Credit getCreditById(Long id) throws NoEntityException {
+    private Credit getCreditById(Long id) throws ApiException {
         return creditRepository.findById(id)
-                .orElseThrow(() -> new NoEntityException("credit"));
+                .orElseThrow(() -> new ApiException("Ошибка при поиске объекта"));
     }
 
     public List<Payment> getPaymentsByCreditOfferId(Long id) {
-        return creditOfferRepository.findById(id).get().getChartOfPayments();
+        List<Payment> payments = new ArrayList<>();
+        creditOfferRepository.findById(id).ifPresent(creditOffer ->
+                payments.addAll(creditOffer.getChartOfPayments()));
+        return payments;
     }
 
     public void deleteByUser(Long id) {
@@ -98,15 +101,16 @@ public class CreditOfferService {
                 .ifPresent(creditOfferRepository::delete);
     }
 
-    public void validate(CreditOfferDto creditOffer, BindingResult bindingResult) {
+    public String validate(CreditOfferRequest creditOffer) {
         Credit credit = creditRepository.getById(creditOffer.getCreditId());
         if (creditOffer.getSumCredit() > credit.getCreditLimit()) {
-            bindingResult.addError(new FieldError("creditOffer", "sumCredit", "требуемая сумма выше предлагаемого кредитного лимита"));
+            return "требуемая сумма выше предлагаемого кредитного лимита";
         }
+        return "";
     }
 
-    public List<CreditOfferDto> getCreditOffers() {
-        List<CreditOfferDto> creditOfferWebs = new ArrayList<>();
+    public List<CreditOfferRequest> getCreditOffers() {
+        List<CreditOfferRequest> creditOfferWebs = new ArrayList<>();
         List<CreditOffer> creditOffers = creditOfferRepository.findAll();
         for (CreditOffer value : creditOffers) {
             creditOfferWebs.add(creditOfferMapper.creditOfferToDto((value)));

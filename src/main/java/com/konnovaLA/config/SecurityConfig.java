@@ -41,17 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
-                  .sessionCreationPolicy(SessionCreationPolicy.NEVER)//отключаем генерацию сессии;
+                .sessionCreationPolicy(SessionCreationPolicy.NEVER)//отключаем генерацию сессии;
                 .and()
                 .addFilterAt(new JwtCsrfFilter(jwtTokenRepository, resolver), CsrfFilter.class)
-                  .csrf().ignoringAntMatchers("/**")//указываем созданный нами фильтр JwtCsrfFilter в расположение стандартного фильтра, при этом игнорируем обработку стандартного;
+                .csrf().ignoringAntMatchers("/**")//указываем созданный нами фильтр JwtCsrfFilter в расположение стандартного фильтра, при этом игнорируем обработку стандартного;
                 .and()
-                  .authorizeRequests()
-                  .antMatchers("/newUser").hasRole("ADMIN")
+                .authorizeRequests()
+                .antMatchers("/newUser").hasRole("ADMIN")
                 .and()
-                 .httpBasic()
-                 .authenticationEntryPoint(((request, response, e) -> resolver.resolveException(request, response, null, e)));//ошибки базовой авторизации отправляем в обработку GlobalExceptionHandler
+                .httpBasic()
+                .authenticationEntryPoint(((request, response, e) -> resolver.resolveException(request, response, null, e)));//ошибки базовой авторизации отправляем в обработку GlobalExceptionHandler
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(this.service);

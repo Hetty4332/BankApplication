@@ -1,6 +1,6 @@
-package com.konnovaLA.mappers.mapperInterface;
+package com.konnovaLA.mappers;
 
-import com.konnovaLA.entities.CreditOfferDto;
+import com.konnovaLA.entities.request.CreditOfferRequest;
 import com.konnovaLA.model.CreditOffer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface CreditOfferMapper {
 
     @Mapping(target = "countMonthCredit", ignore = true)
-    CreditOfferDto creditOfferToDto(CreditOffer creditOffer);
+    CreditOfferRequest creditOfferToDto(CreditOffer creditOffer);
 
-    }
+}
