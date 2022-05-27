@@ -32,17 +32,6 @@ INSERT INTO PERSON (email, password, status, login)
 VALUES ('apiUser@test.ru', '$2a$12$bqI3z5vKArCmRHEmFrDPwu.LxNB1h5PUnlniahy03AAZK7kLUd5q6', 'ACTIVE', 'apiUser2');
 
 INSERT INTO PERSON_ROLES
-VALUES (16, 2);
--------------------------------------
-select * FROM person_roles;
-delete from person_roles
-select *FROM person;
-select * from bank_clients;
-select * from role;
-delete from person_roles where api_user_id=10
-INSERT INTO role(id, name)
-VALUES (2, 'ADMIN');
-delete from role
-delete from person
+VALUES (1, 2);
 
 
